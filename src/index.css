@@ -1,0 +1,92 @@
+@import "tailwindcss";
+
+@theme {
+  --color-gold-light: #E6C663;
+  --color-gold: #D4AF37;
+  --color-gold-dark: #AA8C2C;
+
+  --color-beige-light: #FAF8F5;
+  --color-beige: #F8F4EF;
+  --color-beige-dark: #EADFCF;
+
+  --color-luxury-dark: #1A1A1A;
+  --color-luxury-charcoal: #2D2D2D;
+
+  --font-serif: "Playfair Display", serif;
+  --font-sans: Poppins, sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    background-color: var(--color-beige-light);
+    color: var(--color-luxury-dark);
+    font-family: var(--font-sans);
+    overflow-x: hidden;
+    background-image: 
+      radial-gradient(circle at 100% 150%, rgba(212, 175, 55, 0.05) 24%, transparent 24%),
+      radial-gradient(circle at 0% -50%, rgba(212, 175, 55, 0.05) 24%, transparent 24%);
+    background-attachment: fixed;
+  }
+}
+
+@utility glassmorphism {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 8px 32px 0 rgba(212, 175, 55, 0.04);
+}
+
+@utility glassmorphism-dark {
+  background: rgba(26, 26, 26, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+@utility text-gold-gradient {
+  background: linear-gradient(135deg, #F3E7C4 0%, #D4AF37 50%, #AA8C2C 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@utility bg-gold-gradient {
+  background: linear-gradient(135deg, #F3E7C4 0%, #D4AF37 50%, #AA8C2C 100%);
+}
+
+@utility bg-gold-gradient-hover {
+  background: linear-gradient(135deg, #AA8C2C 0%, #D4AF37 50%, #F3E7C4 100%);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #F8F4EF;
+}
+::-webkit-scrollbar-thumb {
+  background: #D4AF37;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #AA8C2C;
+}
+
+/* Custom animations */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.animate-luxury-float {
+  animation: float 6s ease-in-out infinite;
+}

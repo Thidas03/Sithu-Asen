@@ -1,0 +1,11 @@
+[
+  {
+    "id": "17867067436927fkez",
+    "name": "Test Guest",
+    "email": "test@example.com",
+    "attendance": "attending",
+    "guests": 2,
+    "dietary": "Gluten Free",
+    "created_at": "2026-08-14T11:25:43.692Z"
+  }
+]
