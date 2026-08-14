@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import fs from 'fs';
 import { getRsvps, addRsvp, getWishes, addWish } from './db.js';
 
 dotenv.config();
@@ -14,6 +15,16 @@ const PORT = process.env.PORT || 5000;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const distPath = path.join(__dirname, '../dist');
+
+// Diagnostic logging
+console.log('[DEBUG] __dirname:', __dirname);
+console.log('[DEBUG] distPath:', distPath);
+console.log('[DEBUG] distPath exists:', fs.existsSync(distPath));
+if (fs.existsSync(distPath)) {
+  console.log('[DEBUG] dist folder contents:', fs.readdirSync(distPath));
+} else {
+  console.log('[DEBUG] Parent folder contents:', fs.readdirSync(path.join(__dirname, '..')));
+}
 
 // Enable CORS and JSON parsing
 app.use(cors());
