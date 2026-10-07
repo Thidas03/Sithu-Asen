@@ -276,7 +276,7 @@ export default function RSVP() {
                 {formData.attendance === 'attending' && (
                   <div className="pt-4 flex flex-col sm:flex-row justify-center gap-4">
                     <a
-                      href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Sithumi+%26+Asen%27s+Wedding&dates=20261105T043000Z/20261105T173000Z&details=Join+us+for+our+wedding+ceremony+and+reception+celebration+at+Galle+Face+Hotel!&location=Galle+Face+Hotel,+Colombo"
+                      href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Sithumi+%26+Asen%27s+Wedding&dates=20261105T121500Z/20261105T180000Z&details=Join+us+for+our+wedding+ceremony+and+reception+celebration+at+Galle+Face+Hotel!&location=Galle+Face+Hotel,+Colombo"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center justify-center space-x-2 bg-white border border-gold/30 hover:border-gold px-6 py-3 rounded-xl font-sans text-xs uppercase tracking-widest text-gold transition-colors duration-300"

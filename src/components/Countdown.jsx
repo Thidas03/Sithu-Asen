@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
 export default function Countdown() {
-  const targetDate = new Date('2026-11-05T10:00:00+05:30').getTime(); // Colombo Time
+  const targetDate = new Date('2026-11-05T17:45:00+05:30').getTime(); // Colombo Time
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
     hours: 0,
