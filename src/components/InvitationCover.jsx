@@ -179,26 +179,11 @@ export default function InvitationCover({ onOpen }) {
         </motion.p>
 
         {/* Elegant Divider with Diamond */}
-        <div className="flex items-center justify-center space-x-3 my-3">
-          <span className="w-10 h-[1px] bg-gradient-to-r from-transparent to-gold/40" />
-          <Sparkles className="w-3 h-3 text-gold/80" />
-          <span className="w-10 h-[1px] bg-gradient-to-l from-transparent to-gold/40" />
+        <div className="flex items-center justify-center space-x-3 my-3 mb-6">
+          <span className="w-12 h-[1px] bg-gradient-to-r from-transparent to-gold/40" />
+          <Sparkles className="w-3.5 h-3.5 text-gold/80" />
+          <span className="w-12 h-[1px] bg-gradient-to-l from-transparent to-gold/40" />
         </div>
-
-        {/* Date and Venue */}
-        <motion.div
-          initial={{ y: 10, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.7, delay: 0.45 }}
-          className="mb-7 space-y-1"
-        >
-          <p className="font-serif italic text-base sm:text-lg text-white font-light tracking-wider">
-            Thursday, November 5, 2026
-          </p>
-          <p className="font-sans text-[11px] sm:text-xs tracking-[0.22em] text-beige/75 uppercase font-light">
-            Galle Face Hotel • Colombo
-          </p>
-        </motion.div>
 
         {/* Realistic 3D Golden Wax Seal Button */}
         <motion.div
