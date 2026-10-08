@@ -84,12 +84,21 @@ export default function Hero() {
         />
 
         {/* Wedding details */}
-        <motion.p
+        <motion.div
           variants={itemVariants}
-          className="font-sans text-sm md:text-lg tracking-[0.2em] text-beige/90 uppercase mb-8"
+          className="flex flex-col items-center justify-center space-y-2.5 my-3 mb-10 text-center"
         >
-          November 05, 2026 • Galle Face Hotel, Colombo
-        </motion.p>
+          <p className="font-sans text-xs md:text-base tracking-[0.22em] text-beige/95 uppercase font-normal">
+            Galle Face Hotel, Colombo
+          </p>
+          <div className="flex items-center justify-center space-x-3">
+            <span className="w-6 h-[1px] bg-gold/40" />
+            <p className="font-serif italic text-sm md:text-lg text-gold font-light tracking-widest">
+              November 05, 2026
+            </p>
+            <span className="w-6 h-[1px] bg-gold/40" />
+          </div>
+        </motion.div>
 
         {/* CTA Button */}
         <motion.a
