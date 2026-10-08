@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Heart } from 'lucide-react';
+import { Menu, X, Heart, Volume2, VolumeX } from 'lucide-react';
 
 const navItems = [
   { name: 'Home', href: '#home' },
@@ -11,7 +11,7 @@ const navItems = [
   { name: 'Guestbook', href: '#wishes' },
 ];
 
-export default function Navbar() {
+export default function Navbar({ isPlaying, onToggleSound }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -76,6 +76,18 @@ export default function Navbar() {
                 <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-gold transition-all duration-300 group-hover:w-full" />
               </a>
             ))}
+
+            {/* Subtle Desktop Sound Control */}
+            {onToggleSound && (
+              <button
+                onClick={onToggleSound}
+                className="p-2 rounded-full text-gold hover:text-white hover:bg-gold/20 transition-all duration-300 cursor-pointer"
+                aria-label={isPlaying ? "Mute music" : "Play music"}
+                title={isPlaying ? "Mute music" : "Play music"}
+              >
+                {isPlaying ? <Volume2 className="w-4 h-4 text-gold" /> : <VolumeX className="w-4 h-4 text-gold/60" />}
+              </button>
+            )}
             
             <a
               href="#rsvp"
@@ -86,8 +98,18 @@ export default function Navbar() {
             </a>
           </div>
 
-          {/* Mobile Menu Button */}
-          <div className="lg:hidden flex items-center">
+          {/* Mobile Actions: Sound + Hamburger */}
+          <div className="lg:hidden flex items-center space-x-3">
+            {onToggleSound && (
+              <button
+                onClick={onToggleSound}
+                className="p-1.5 rounded-full text-gold hover:text-white transition-colors cursor-pointer"
+                aria-label={isPlaying ? "Mute music" : "Play music"}
+              >
+                {isPlaying ? <Volume2 className="w-5 h-5 text-gold" /> : <VolumeX className="w-5 h-5 text-gold/60" />}
+              </button>
+            )}
+
             <button
               onClick={() => setIsOpen(!isOpen)}
               className={`hover:text-gold transition-colors focus:outline-none ${
