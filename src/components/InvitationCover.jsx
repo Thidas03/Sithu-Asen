@@ -46,7 +46,7 @@ export default function InvitationCover({ onOpen }) {
     >
       {/* Background romantic photo with dark luxury overlay */}
       <div 
-        className="absolute inset-0 bg-cover bg-[center_20%] opacity-20 scale-105 pointer-events-none"
+        className="absolute inset-0 bg-cover bg-[center_70%] opacity-25 scale-105 pointer-events-none"
         style={{ backgroundImage: `url('/hero.jpg')` }}
       />
       <div className="absolute inset-0 bg-gradient-to-t from-luxury-dark via-luxury-dark/90 to-luxury-dark pointer-events-none" />

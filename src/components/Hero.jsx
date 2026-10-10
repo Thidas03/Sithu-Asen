@@ -41,7 +41,7 @@ export default function Hero() {
         initial={{ scale: 1.1, opacity: 0 }}
         animate={{ scale: 1.0, opacity: 0.65 }}
         transition={{ duration: 3, ease: 'easeOut' }}
-        className="absolute inset-0 bg-cover bg-[center_15%]"
+        className="absolute inset-0 bg-cover bg-[center_70%]"
         style={{
           backgroundImage: `url('/hero.jpg')`,
         }}
