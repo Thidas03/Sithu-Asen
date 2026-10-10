@@ -7,9 +7,9 @@ const events = [
     type: "Poruwa Ceremony",
     date: "Thursday, November 5, 2026",
     time: "5:45 PM",
-    venue: "The Lawn (Outdoor), Galle Face Hotel",
+    venue: "North Lawn, Galle Face Hotel",
     address: "2 Galle Road, Colombo 00300",
-    mapUrl: "https://maps.google.com/?q=Galle+Face+Hotel+Colombo+Lawn",
+    mapUrl: "https://maps.google.com/?q=Galle+Face+Hotel+Colombo+North+Lawn",
     bgImage: "/poruwa.png",
   },
   {

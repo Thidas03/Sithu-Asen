@@ -120,30 +120,12 @@ export default function InvitationCover({ onOpen }) {
           <circle cx="12" cy="12" r="2" fill="currentColor" />
         </svg>
 
-        {/* Royal Crest Monogram with Laurel Leaves */}
-        <motion.div 
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.7, delay: 0.15 }}
-          className="flex flex-col items-center justify-center mb-4"
-        >
-          <div className="relative flex items-center justify-center w-14 h-14 rounded-full border border-gold/40 bg-gold/5 shadow-inner">
-            <span className="font-serif text-xl tracking-wider text-gold font-light">S</span>
-            <Heart className="w-3 h-3 text-gold fill-gold/40 mx-0.5" />
-            <span className="font-serif text-xl tracking-wider text-gold font-light">A</span>
-            
-            {/* Tiny gold dot ornaments */}
-            <span className="absolute -top-1 w-1.5 h-1.5 rounded-full bg-gold" />
-            <span className="absolute -bottom-1 w-1.5 h-1.5 rounded-full bg-gold" />
-          </div>
-        </motion.div>
-
         {/* Elegant Calligraphic Intro */}
         <motion.p
           initial={{ y: 10, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.7, delay: 0.25 }}
-          className="font-script text-2xl sm:text-3xl text-gold-light tracking-wide mb-1"
+          transition={{ duration: 0.7, delay: 0.2 }}
+          className="font-script text-2xl sm:text-3xl text-gold-light tracking-wide mb-1 pt-2"
         >
           Together with their families
         </motion.p>
@@ -185,7 +167,7 @@ export default function InvitationCover({ onOpen }) {
           <span className="w-12 h-[1px] bg-gradient-to-l from-transparent to-gold/40" />
         </div>
 
-        {/* Realistic 3D Golden Wax Seal Button */}
+        {/* Royal Crest Action Button matching top S A monogram styling */}
         <motion.div
           initial={{ scale: 0.85, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -196,19 +178,30 @@ export default function InvitationCover({ onOpen }) {
             whileHover={{ scale: 1.07 }}
             whileTap={{ scale: 0.93 }}
             onClick={handleOpen}
-            className="group relative flex flex-col items-center justify-center w-24 h-24 rounded-full wax-seal cursor-pointer transition-transform duration-300 select-none"
+            className="group relative flex flex-col items-center justify-center w-24 h-24 rounded-full cursor-pointer transition-transform duration-300 select-none border border-gold/40 bg-gold/5 shadow-inner"
+            style={{
+              background: 'radial-gradient(circle at center, rgba(32, 29, 23, 0.96) 0%, rgba(18, 17, 14, 0.98) 100%)',
+              boxShadow: '0 12px 28px -6px rgba(0, 0, 0, 0.75), 0 0 25px rgba(212, 175, 55, 0.2), inset 0 1px 2px rgba(212, 175, 55, 0.25)',
+              border: '1px solid rgba(212, 175, 55, 0.45)'
+            }}
             aria-label="Open Wedding Invitation"
           >
             {/* Ambient Pulsing Glow Aura */}
-            <span className="absolute -inset-3 rounded-full bg-gold/25 blur-md animate-pulse pointer-events-none" />
-            <span className="absolute -inset-1.5 rounded-full border border-gold/40 animate-ping opacity-50 pointer-events-none" />
+            <span className="absolute -inset-3 rounded-full bg-gold/15 blur-md animate-pulse pointer-events-none" />
+            <span className="absolute -inset-1.5 rounded-full border border-gold/30 animate-ping opacity-40 pointer-events-none" />
 
-            {/* Inner Stitched Dashed Ring */}
-            <div className="w-[74px] h-[74px] rounded-full wax-seal-inner flex flex-col items-center justify-center p-1">
-              <span className="font-serif text-lg tracking-widest text-[#4A370A] font-bold drop-shadow-[0_1px_1px_rgba(255,255,255,0.7)] group-hover:scale-105 transition-transform duration-300">
-                S&A
-              </span>
-              <span className="font-cinzel text-[8.5px] font-bold tracking-[0.25em] uppercase text-[#4A370A] mt-0.5 drop-shadow-[0_1px_1px_rgba(255,255,255,0.7)]">
+            {/* Tiny gold dot ornaments matching top monogram */}
+            <span className="absolute -top-1 w-1.5 h-1.5 rounded-full bg-gold shadow-[0_0_6px_rgba(212,175,55,0.8)]" />
+            <span className="absolute -bottom-1 w-1.5 h-1.5 rounded-full bg-gold shadow-[0_0_6px_rgba(212,175,55,0.8)]" />
+
+            {/* Inner Ring matching top crest styling */}
+            <div className="w-[74px] h-[74px] rounded-full border border-gold/30 flex flex-col items-center justify-center p-1 bg-gold/[0.04]">
+              <div className="flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
+                <span className="font-serif text-xl tracking-wider text-gold font-light">S</span>
+                <Heart className="w-3.5 h-3.5 text-gold fill-gold/40 mx-0.5" />
+                <span className="font-serif text-xl tracking-wider text-gold font-light">A</span>
+              </div>
+              <span className="font-cinzel text-[8.5px] font-semibold tracking-[0.28em] uppercase text-gold/90 mt-0.5">
                 OPEN
               </span>
             </div>
@@ -222,7 +215,7 @@ export default function InvitationCover({ onOpen }) {
             className="mt-4 flex flex-col items-center space-y-1"
           >
             <span className="font-sans text-[10px] sm:text-[11px] uppercase tracking-[0.22em] text-gold-light/90 font-medium">
-              Tap wax seal to open
+              Tap seal to open
             </span>
             <div className="flex items-center space-x-1.5 text-beige/50 text-[9.5px] font-sans tracking-widest uppercase">
               <Music className="w-3 h-3 text-gold/80 animate-pulse" />
