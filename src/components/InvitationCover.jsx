@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Volume2, VolumeX } from 'lucide-react';
+import { Volume2, VolumeX } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 export default function InvitationCover({ onOpen, onStartAudio, isPlaying, onToggleSound }) {
@@ -159,7 +159,7 @@ export default function InvitationCover({ onOpen, onStartAudio, isPlaying, onTog
           - X center is at 50%
         */}
         <div 
-          className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 flex flex-col items-center justify-center cursor-pointer pointer-events-auto"
+          className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 flex items-center justify-center cursor-pointer pointer-events-auto"
           style={{ top: '48.7%' }}
         >
           <motion.button
@@ -167,7 +167,7 @@ export default function InvitationCover({ onOpen, onStartAudio, isPlaying, onTog
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.94 }}
             className="group relative flex items-center justify-center w-28 h-28 sm:w-32 sm:h-32 rounded-full cursor-pointer focus:outline-none select-none"
-            aria-label="Tap wax seal to open invitation"
+            aria-label="Click wax seal to open invitation"
           >
             {/* Pulsing Golden Aura Halo Rings */}
             <motion.span 
@@ -201,33 +201,38 @@ export default function InvitationCover({ onOpen, onStartAudio, isPlaying, onTog
             {/* Tap Hotspot Circle */}
             <div className="w-24 h-24 sm:w-26 sm:h-26 rounded-full transition-all duration-300 group-hover:shadow-[0_0_32px_rgba(212,175,55,0.7)]" />
           </motion.button>
-
-          {/* Floating Aesthetic Darleston "Tap to open" Prompt */}
-          <AnimatePresence>
-            {!isOpening && (
-              <motion.div
-                initial={{ opacity: 0, y: 4 }}
-                animate={{ 
-                  opacity: 1, 
-                  y: [0, 3, 0] 
-                }}
-                exit={{ opacity: 0, scale: 0.8 }}
-                transition={{ 
-                  y: { repeat: Infinity, duration: 2.4, ease: "easeInOut" },
-                  opacity: { duration: 0.5 }
-                }}
-                onClick={handleOpenClick}
-                className="mt-2.5 flex items-center space-x-1.5 px-3 py-0.5 rounded-full bg-white/70 hover:bg-white/90 backdrop-blur-xs border border-[#D4AF37]/35 shadow-xs cursor-pointer group transition-all"
-              >
-                <Sparkles className="w-2.5 h-2.5 text-[#AA8C2C] opacity-70 animate-spin" style={{ animationDuration: '6s' }} />
-                <span className="font-darleston text-base sm:text-[17px] text-[#654A18] tracking-wide leading-none pt-0.5 select-none font-normal">
-                  Tap to open
-                </span>
-                <Sparkles className="w-2.5 h-2.5 text-[#AA8C2C] opacity-70 animate-spin" style={{ animationDuration: '6s' }} />
-              </motion.div>
-            )}
-          </AnimatePresence>
         </div>
+
+        {/* Pure Text Prompt: "OPEN THE INVITATION" (Not a button, just clean text below the wax seal) */}
+        <AnimatePresence>
+          {!isOpening && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ 
+                opacity: [0.75, 1, 0.75],
+                y: [0, 2, 0]
+              }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              transition={{ 
+                duration: 3, 
+                repeat: Infinity, 
+                ease: "easeInOut" 
+              }}
+              onClick={handleOpenClick}
+              className="absolute left-1/2 -translate-x-1/2 z-30 flex items-center cursor-pointer select-none pointer-events-auto whitespace-nowrap"
+              style={{ top: 'calc(48.7% + 72px)' }}
+            >
+              <span 
+                className="font-cinzel text-[10px] sm:text-[11.5px] tracking-[0.28em] text-[#634C24] uppercase font-medium select-none drop-shadow-[0_1px_2px_rgba(255,255,255,0.95)] hover:text-[#4A3716] transition-colors"
+                style={{
+                  textShadow: '0 1px 2px rgba(255, 255, 255, 0.95)'
+                }}
+              >
+                OPEN THE INVITATION
+              </span>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Celebration Flash Overlay on Open */}
         {isOpening && (
