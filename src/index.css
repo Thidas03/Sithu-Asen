@@ -93,12 +93,24 @@
   animation: float 6s ease-in-out infinite;
 }
 
+@font-face {
+  font-family: 'Darleston';
+  src: url('/fonts/Darleston.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 .font-script {
   font-family: var(--font-script), cursive;
 }
 
 .font-cinzel {
   font-family: var(--font-cinzel), serif;
+}
+
+.font-darleston {
+  font-family: 'Darleston', "Great Vibes", cursive;
 }
 
 /* Realistic 3D Gold Wax Seal */
