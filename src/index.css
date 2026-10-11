@@ -103,22 +103,22 @@
 
 /* Realistic 3D Gold Wax Seal */
 .wax-seal {
-  background: radial-gradient(circle at 35% 30%, #FFF3B8 0%, #E6C663 25%, #C29B27 60%, #8C6B13 100%);
+  background: radial-gradient(circle at 35% 30%, #FFF8DC 0%, #F5D77F 22%, #D4AF37 55%, #AA8C2C 82%, #7A5E12 100%);
   box-shadow: 
-    0 10px 25px -5px rgba(0, 0, 0, 0.6),
+    0 12px 25px -4px rgba(120, 90, 20, 0.45),
     0 0 35px 2px rgba(212, 175, 55, 0.35),
-    inset 0 2px 4px rgba(255, 255, 255, 0.7),
-    inset 0 -3px 6px rgba(0, 0, 0, 0.4);
+    inset 0 2px 4px rgba(255, 255, 255, 0.8),
+    inset 0 -3px 6px rgba(90, 65, 10, 0.6);
 }
 
 .wax-seal-inner {
-  border: 1.5px dashed rgba(255, 255, 255, 0.45);
-  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.3);
+  border: 1px dashed rgba(255, 255, 255, 0.55);
+  box-shadow: inset 0 2px 6px rgba(90, 65, 10, 0.45);
 }
 
 /* Shimmering Gold Foil Text */
 .text-gold-foil {
-  background: linear-gradient(135deg, #FFF6D6 0%, #E6C663 25%, #AA8C2C 50%, #E6C663 75%, #FFFFFF 100%);
+  background: linear-gradient(135deg, #FAF0D7 0%, #D4AF37 28%, #8C6B13 50%, #E6C663 72%, #FFFFFF 100%);
   background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -129,4 +129,27 @@
   to {
     background-position: 200% center;
   }
+}
+
+/* Luxury Paper Texture */
+.bg-luxury-paper {
+  background-color: #FAF7F2;
+  background-image: 
+    radial-gradient(#D4AF37 0.6px, transparent 0.6px),
+    radial-gradient(#D4AF37 0.6px, #FAF7F2 0.6px);
+  background-size: 24px 24px;
+  background-position: 0 0, 12px 12px;
+  background-opacity: 0.05;
+}
+
+/* 3D Envelope Perspective Utilities */
+.perspective-1000 {
+  perspective: 1000px;
+}
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+.backface-hidden {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }

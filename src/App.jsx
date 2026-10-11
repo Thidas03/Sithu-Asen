@@ -17,10 +17,20 @@ function App() {
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef(null);
 
+  const handleStartMusic = () => {
+    if (audioRef.current && !isPlaying) {
+      audioRef.current.play().then(() => {
+        setIsPlaying(true);
+      }).catch((err) => {
+        console.error("Audio playback error:", err);
+      });
+    }
+  };
+
   const handleOpenInvitation = () => {
     setIsInvitationOpen(true);
 
-    if (audioRef.current) {
+    if (audioRef.current && !isPlaying) {
       audioRef.current.play().then(() => {
         setIsPlaying(true);
       }).catch((err) => {
@@ -57,7 +67,12 @@ function App() {
       {/* Royal "Open Invitation" Envelope Screen */}
       <AnimatePresence>
         {!isInvitationOpen && (
-          <InvitationCover onOpen={handleOpenInvitation} />
+          <InvitationCover 
+            onOpen={handleOpenInvitation}
+            onStartAudio={handleStartMusic}
+            isPlaying={isPlaying}
+            onToggleSound={handleToggleSound}
+          />
         )}
       </AnimatePresence>
 

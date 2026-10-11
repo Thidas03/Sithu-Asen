@@ -59,21 +59,21 @@ export default function Hero() {
         animate="visible"
         className="relative z-20 text-center px-4 max-w-4xl mx-auto flex flex-col items-center justify-center h-full"
       >
-        {/* Save the Date badge */}
+        {/* We Are Getting Married badge */}
         <motion.p
           variants={itemVariants}
-          className="font-sans text-xs md:text-sm tracking-[0.3em] text-gold uppercase mb-6"
+          className="font-cinzel text-xs md:text-sm tracking-[0.35em] text-gold uppercase mb-6 font-medium"
         >
-          Save the Date
+          We Are Getting Married
         </motion.p>
 
         {/* Couple Names */}
         <motion.h1
           variants={itemVariants}
-          className="font-serif text-5xl md:text-8xl font-light tracking-wide text-white leading-tight mb-4 flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8"
+          className="font-serif text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-light tracking-wide text-white leading-tight mb-3 sm:mb-4 flex flex-col md:flex-row items-center justify-center gap-2 sm:gap-4 md:gap-8"
         >
           <span>Sithumi</span>
-          <span className="text-gold font-serif italic text-4xl md:text-6xl font-normal">&</span>
+          <span className="text-gold font-serif italic text-3xl sm:text-4xl md:text-6xl font-normal">&</span>
           <span>Asen</span>
         </motion.h1>
 
