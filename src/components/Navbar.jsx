@@ -44,8 +44,8 @@ export default function Navbar({ isPlaying, onToggleSound }) {
         transition={{ duration: 0.8, ease: 'easeOut' }}
         className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
           isScrolled 
-            ? 'py-4 glassmorphism border-b border-gold/20 shadow-md' 
-            : 'py-6 bg-transparent'
+            ? 'py-3.5 glassmorphism border-b border-gold/20 shadow-md opacity-100 pointer-events-auto translate-y-0' 
+            : 'py-4 bg-transparent max-lg:opacity-0 max-lg:pointer-events-none max-lg:-translate-y-full lg:opacity-100 lg:pointer-events-auto lg:translate-y-0 lg:py-6'
         }`}
       >
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
