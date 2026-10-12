@@ -45,6 +45,13 @@ const writeLocalFile = async (filePath, data) => {
   }
 };
 
+// Normalize sender name to merge duplicates (e.g., Tharushi / Tharushi Jayakody, Isuri / Isuri❤️, Malli)
+const normalizeSender = (name) => {
+  let clean = (name || '').replace(/[^\p{L}\p{N}]+/gu, ' ').trim().toLowerCase();
+  if (clean.startsWith('tharushi')) return 'tharushi';
+  return clean;
+};
+
 // 1. Fetch RSVPs
 export const getRsvps = async () => {
   let list = [];
@@ -167,14 +174,15 @@ export const getWishes = async () => {
     return true;
   });
 
-  // Deduplicate identical submissions (same person + same message)
-  const normalize = (str) => (str || '').replace(/[^\p{L}\p{N}]+/gu, ' ').trim().toLowerCase();
-  const seen = new Set();
+  // Sort newest first so each sender's latest wish is kept
+  const sorted = [...filtered].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+  const seenSenders = new Set();
   const deduplicated = [];
-  for (const w of filtered) {
-    const key = `${normalize(w.name)}:::${normalize(w.message)}`;
-    if (!seen.has(key)) {
-      seen.add(key);
+  for (const w of sorted) {
+    const key = normalizeSender(w.name);
+    if (!seenSenders.has(key)) {
+      seenSenders.add(key);
       deduplicated.push(w);
     }
   }
@@ -244,11 +252,10 @@ export const deleteWish = async (id) => {
         const data = await response.json();
         if (Array.isArray(data)) {
           const target = data.find(w => String(w.id) === strId);
-          if (target && target.name && target.message) {
-            const normalize = (str) => (str || '').replace(/[^\p{L}\p{N}]+/gu, ' ').trim().toLowerCase();
-            const targetKey = `${normalize(target.name)}:::${normalize(target.message)}`;
+          if (target && target.name) {
+            const targetSender = normalizeSender(target.name);
             for (const item of data) {
-              if (item.id && `${normalize(item.name)}:::${normalize(item.message)}` === targetKey) {
+              if (item.id && normalizeSender(item.name) === targetSender) {
                 idsToDelete.add(String(item.id));
               }
             }

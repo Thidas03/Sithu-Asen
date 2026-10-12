@@ -30,11 +30,15 @@ export default function GuestWishes() {
   };
 
   const deduplicate = (list) => {
-    const normalize = (str) => (str || '').replace(/[^\p{L}\p{N}]+/gu, ' ').trim().toLowerCase();
+    const normalizeSender = (name) => {
+      let clean = (name || '').replace(/[^\p{L}\p{N}]+/gu, ' ').trim().toLowerCase();
+      if (clean.startsWith('tharushi')) return 'tharushi';
+      return clean;
+    };
     const seen = new Set();
     const result = [];
     for (const w of list) {
-      const key = `${normalize(w.name)}:::${normalize(w.message)}`;
+      const key = normalizeSender(w.name);
       if (!seen.has(key)) {
         seen.add(key);
         result.push(w);
