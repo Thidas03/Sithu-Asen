@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 260" width="160" height="173" className="select-none">
+  <defs>
+    <linearGradient id="footerGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#C5A059" />
+      <stop offset="35%" stop-color="#DFBA6E" />
+      <stop offset="70%" stop-color="#AA8C2C" />
+      <stop offset="100%" stop-color="#8C6E20" />
+    </linearGradient>
+    <filter id="monogramShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="1" stdDeviation="1" flood-color="#554015" flood-opacity="0.15" />
+    </filter>
+  </defs>
+
+  <g filter="url(#monogramShadow)">
+    <!-- Fine Inner Oval Ring -->
+    <ellipse cx="120" cy="130" rx="82" ry="98" fill="none" stroke="url(#footerGold)" stroke-width="1.8" opacity="0.85" />
+    <ellipse cx="120" cy="130" rx="78" ry="94" fill="none" stroke="url(#footerGold)" stroke-width="0.75" opacity="0.4" />
+
+    <!-- Top-Right Laurel Sprig -->
+    <g fill="url(#footerGold)" stroke="url(#footerGold)">
+      <!-- Main curved stem -->
+      <path d="M 112,48 C 142,50 178,68 188,102 C 193,118 193,136 190,152" fill="none" stroke-width="1.8" stroke-linecap="round" />
+      
+      <!-- Tip leaf -->
+      <path d="M 190,152 C 196,160 198,168 198,168 C 198,168 191,164 187,156 Z" stroke-width="0.5" />
+      
+      <!-- Leaf pair 1 -->
+      <path d="M 124,50 C 134,42 142,43 142,43 C 142,43 134,51 127,53 Z" stroke-width="0.5" />
+      <path d="M 123,55 C 130,60 135,66 135,66 C 135,66 127,64 122,58 Z" stroke-width="0.5" />
+      
+      <!-- Leaf pair 2 -->
+      <path d="M 148,60 C 160,55 168,60 168,60 C 168,60 159,66 150,65 Z" stroke-width="0.5" />
+      <path d="M 146,67 C 153,75 158,83 158,83 C 158,83 150,79 143,72 Z" stroke-width="0.5" />
+      
+      <!-- Leaf pair 3 -->
+      <path d="M 170,80 C 183,78 189,86 189,86 C 189,86 179,89 171,85 Z" stroke-width="0.5" />
+      <path d="M 166,88 C 174,98 176,108 176,108 C 176,108 168,102 162,93 Z" stroke-width="0.5" />
+      
+      <!-- Leaf pair 4 -->
+      <path d="M 184,108 C 197,110 200,121 200,121 C 200,121 191,121 184,114 Z" stroke-width="0.5" />
+      <path d="M 179,114 C 185,126 184,136 184,136 C 184,136 178,127 175,119 Z" stroke-width="0.5" />
+    </g>
+
+    <!-- Bottom-Left Laurel Sprig -->
+    <g fill="url(#footerGold)" stroke="url(#footerGold)">
+      <!-- Main curved stem -->
+      <path d="M 128,212 C 98,210 62,192 52,158 C 47,142 47,124 50,108" fill="none" stroke-width="1.8" stroke-linecap="round" />
+      
+      <!-- Tip leaf -->
+      <path d="M 50,108 C 44,100 42,92 42,92 C 42,92 49,96 53,104 Z" stroke-width="0.5" />
+      
+      <!-- Leaf pair 1 -->
+      <path d="M 116,210 C 106,218 98,217 98,217 C 98,217 106,209 113,207 Z" stroke-width="0.5" />
+      <path d="M 117,205 C 110,200 105,194 105,194 C 105,194 113,196 118,202 Z" stroke-width="0.5" />
+      
+      <!-- Leaf pair 2 -->
+      <path d="M 92,200 C 80,205 72,200 72,200 C 72,200 81,194 90,195 Z" stroke-width="0.5" />
+      <path d="M 94,193 C 87,185 82,177 82,177 C 82,177 90,181 97,188 Z" stroke-width="0.5" />
+      
+      <!-- Leaf pair 3 -->
+      <path d="M 70,180 C 57,182 51,174 51,174 C 51,174 61,171 69,175 Z" stroke-width="0.5" />
+      <path d="M 74,172 C 66,162 64,152 64,152 C 64,152 72,158 78,167 Z" stroke-width="0.5" />
+      
+      <!-- Leaf pair 4 -->
+      <path d="M 56,152 C 43,150 40,139 40,139 C 40,139 49,139 56,146 Z" stroke-width="0.5" />
+      <path d="M 61,146 C 55,134 56,124 56,124 C 56,124 62,133 65,141 Z" stroke-width="0.5" />
+    </g>
+
+    <!-- Classical Roman Serif Monogram: A & S -->
+    <text x="86" y="148" font-family="'Cinzel', 'Playfair Display', 'Times New Roman', serif" font-size="58" font-weight="400" fill="url(#footerGold)" text-anchor="middle" letter-spacing="-1">A</text>
+    <text x="118" y="137" font-family="'Playfair Display', 'Baskerville', 'Georgia', serif" font-size="30" font-style="italic" font-weight="300" fill="url(#footerGold)" text-anchor="middle">&amp;</text>
+    <text x="150" y="162" font-family="'Cinzel', 'Playfair Display', 'Times New Roman', serif" font-size="58" font-weight="400" fill="url(#footerGold)" text-anchor="middle" letter-spacing="-1">S</text>
+  </g>
+</svg>

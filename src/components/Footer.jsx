@@ -1,5 +1,6 @@
 import React from 'react';
 import { Heart } from 'lucide-react';
+import MonogramSeal from './MonogramSeal';
 
 export default function Footer({ onAdminClick }) {
   const currentYear = new Date().getFullYear();
@@ -19,10 +20,8 @@ export default function Footer({ onAdminClick }) {
 
       <div className="relative z-10 max-w-4xl mx-auto text-center flex flex-col items-center space-y-6">
         
-        {/* Monogram logo */}
-        <div className="font-serif text-3xl md:text-4xl tracking-[0.25em] text-gold-dark select-none font-light">
-          S & A
-        </div>
+        {/* Monogram emblem from invitation cover (without wax seal) */}
+        <MonogramSeal className="w-24 sm:w-28 my-1" initials="A&S" />
 
         {/* Wedding hashtag */}
         <div className="inline-flex items-center space-x-2 py-1.5 px-5 border border-gold/30 rounded-full bg-white/70 shadow-xs">

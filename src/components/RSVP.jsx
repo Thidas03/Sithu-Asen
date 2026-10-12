@@ -88,7 +88,7 @@ export default function RSVP() {
           <h2 className="font-serif text-4xl md:text-5xl font-light text-luxury-dark mb-4">RSVP</h2>
           <div className="flex items-center justify-center space-x-4">
             <div className="w-12 h-[1px] bg-gold/30" />
-            <span className="font-sans text-xs uppercase tracking-widest text-gold/70">Kindly Reply By October 5, 2026</span>
+            <span className="font-sans text-xs uppercase tracking-widest text-gold/70">Kindly Reply By October</span>
             <div className="w-12 h-[1px] bg-gold/30" />
           </div>
         </div>
