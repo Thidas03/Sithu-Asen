@@ -162,7 +162,7 @@ export const getWishes = async () => {
     'tharushi', 
     'dr. k. perera'
   ];
-  return list.filter(w => {
+  const filtered = list.filter(w => {
     if (!w.id || deletedSet.has(String(w.id))) return false;
     if (!w.name || !w.name.trim()) return false;
     const n = w.name.trim().toLowerCase();
@@ -171,6 +171,19 @@ export const getWishes = async () => {
     if (m.includes('magical journey') || m.includes('lifetime of love') || m.includes('watching your love story') || m.includes('enjoy every moment')) return false;
     return true;
   });
+
+  // Deduplicate identical submissions (same person + exact same message)
+  const seen = new Set();
+  const deduplicated = [];
+  for (const w of filtered) {
+    const key = `${(w.name || '').trim().toLowerCase()}:::${(w.message || '').trim().toLowerCase()}`;
+    if (!seen.has(key)) {
+      seen.add(key);
+      deduplicated.push(w);
+    }
+  }
+
+  return deduplicated;
 };
 
 // 4. Add Wish
@@ -221,21 +234,6 @@ export const addWish = async (wish) => {
 // 5. Delete Wish
 export const deleteWish = async (id) => {
   const strId = String(id);
-
-  // Notify Google Sheet if URL exists
-  const sheetUrl = process.env.GOOGLE_SHEET_URL;
-  if (sheetUrl) {
-    try {
-      await fetch(sheetUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ type: 'delete_wish', action: 'delete_wish', id: strId }),
-        redirect: 'follow'
-      });
-    } catch (err) {
-      console.error('Error posting wish deletion to Google Sheet:', err.message);
-    }
-  }
 
   // Persist deletion locally and remove from active wishes
   return new Promise((resolve) => {

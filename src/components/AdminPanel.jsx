@@ -27,6 +27,19 @@ export default function AdminPanel({ isOpen, onClose }) {
     }
   };
 
+  const deduplicate = (list) => {
+    const seen = new Set();
+    const result = [];
+    for (const w of list) {
+      const key = `${(w.name || '').trim().toLowerCase()}:::${(w.message || '').trim().toLowerCase()}`;
+      if (!seen.has(key)) {
+        seen.add(key);
+        result.push(w);
+      }
+    }
+    return result;
+  };
+
   const fetchData = async () => {
     try {
       // Fetch RSVPs
@@ -40,7 +53,12 @@ export default function AdminPanel({ isOpen, onClose }) {
       const wishesRes = await fetch('/api/wishes');
       if (wishesRes.ok) {
         const wishesData = await wishesRes.json();
-        setWishes(wishesData);
+        let deletedIds = [];
+        try {
+          deletedIds = JSON.parse(localStorage.getItem('deleted_wish_ids') || '[]');
+        } catch {}
+        const active = wishesData.filter(w => !deletedIds.includes(String(w.id)));
+        setWishes(deduplicate(active));
       }
     } catch (err) {
       console.error('Error fetching admin data:', err);
@@ -96,6 +114,17 @@ export default function AdminPanel({ isOpen, onClose }) {
         setConfirmDeleteId(null);
         setActionMessage('Wish deleted successfully.');
         setTimeout(() => setActionMessage(''), 3500);
+
+        // Save to deleted_wish_ids in localStorage to persist deletion on frontend
+        try {
+          const currentDeleted = JSON.parse(localStorage.getItem('deleted_wish_ids') || '[]');
+          if (!currentDeleted.includes(String(id))) {
+            currentDeleted.push(String(id));
+            localStorage.setItem('deleted_wish_ids', JSON.stringify(currentDeleted));
+          }
+        } catch {
+          // ignore
+        }
 
         // Also clean up client localStorage if present
         try {

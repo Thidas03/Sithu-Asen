@@ -33,14 +33,38 @@ export default function GuestWishes() {
   const [name, setName] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const getDeletedIds = () => {
+    try {
+      const stored = localStorage.getItem('deleted_wish_ids');
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  };
+
+  const deduplicate = (list) => {
+    const seen = new Set();
+    const result = [];
+    for (const w of list) {
+      const key = `${(w.name || '').trim().toLowerCase()}:::${(w.message || '').trim().toLowerCase()}`;
+      if (!seen.has(key)) {
+        seen.add(key);
+        result.push(w);
+      }
+    }
+    return result;
+  };
 
   const fetchWishes = async () => {
     try {
       const response = await fetch('/api/wishes');
       if (response.ok) {
         const data = await response.json();
+        const deletedIds = getDeletedIds();
         const formatted = data
-          .filter(wish => !isDummyWish(wish))
+          .filter(wish => !isDummyWish(wish) && !deletedIds.includes(String(wish.id)))
           .map(wish => ({
             id: wish.id,
             name: wish.name,
@@ -51,7 +75,7 @@ export default function GuestWishes() {
               year: 'numeric',
             })
           }));
-        setWishes(formatted);
+        setWishes(deduplicate(formatted));
       } else {
         loadFromLocalStorage();
       }
@@ -67,9 +91,11 @@ export default function GuestWishes() {
       if (saved) {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed)) {
-          const filtered = parsed.filter(w => !isDummyWish(w));
-          setWishes(filtered);
-          localStorage.setItem('wedding_wishes', JSON.stringify(filtered));
+          const deletedIds = getDeletedIds();
+          const filtered = parsed.filter(w => !isDummyWish(w) && !deletedIds.includes(String(w.id)));
+          const unique = deduplicate(filtered);
+          setWishes(unique);
+          localStorage.setItem('wedding_wishes', JSON.stringify(unique));
           return;
         }
       }
@@ -85,6 +111,7 @@ export default function GuestWishes() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isSubmitting) return;
     setError('');
 
     if (!name.trim() || !message.trim()) {
@@ -92,6 +119,7 @@ export default function GuestWishes() {
       return;
     }
 
+    setIsSubmitting(true);
     try {
       const response = await fetch('/api/wishes', {
         method: 'POST',
@@ -112,27 +140,12 @@ export default function GuestWishes() {
 
       setName('');
       setMessage('');
-      fetchWishes();
+      await fetchWishes();
     } catch (err) {
-      console.warn('API post failed, falling back to local storage:', err);
-      
-      const newWish = {
-        id: Date.now(),
-        name: name.trim(),
-        message: message.trim(),
-        date: new Date().toLocaleDateString('en-US', {
-          month: 'long',
-          day: 'numeric',
-          year: 'numeric',
-        }),
-      };
-
-      const updatedWishes = [newWish, ...wishes];
-      setWishes(updatedWishes);
-      localStorage.setItem('wedding_wishes', JSON.stringify(updatedWishes));
-
-      setName('');
-      setMessage('');
+      console.error('Wish submission error:', err);
+      setError(err.message || 'Failed to post message.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -200,10 +213,11 @@ export default function GuestWishes() {
 
               <button
                 type="submit"
-                className="w-full bg-gold-gradient hover:bg-gold-gradient-hover text-white py-3 rounded-xl font-sans text-xs uppercase tracking-widest font-semibold transition-all duration-300 shadow-md hover:shadow-lg hover:shadow-gold/25 transform hover:-translate-y-0.5 active:translate-y-0 cursor-pointer flex items-center justify-center space-x-2"
+                disabled={isSubmitting}
+                className="w-full bg-gold-gradient hover:bg-gold-gradient-hover text-white py-3 rounded-xl font-sans text-xs uppercase tracking-widest font-semibold transition-all duration-300 shadow-md hover:shadow-lg hover:shadow-gold/25 transform hover:-translate-y-0.5 active:translate-y-0 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
               >
                 <Send className="w-3.5 h-3.5" />
-                <span>Post Message</span>
+                <span>{isSubmitting ? 'Posting...' : 'Post Message'}</span>
               </button>
             </form>
           </div>
