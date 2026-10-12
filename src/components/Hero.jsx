@@ -28,17 +28,17 @@ export default function Hero() {
   return (
     <section
       id="home"
-      className="relative min-h-[100dvh] w-full flex items-center justify-center overflow-hidden bg-[#0D0B08] select-none"
+      className="relative h-[100dvh] min-h-[100dvh] w-full flex items-center justify-center overflow-hidden bg-[#0D0B08] select-none"
     >
       {/* Subtle Ambient Vignette Backdrop */}
       <div className="absolute inset-0 bg-radial from-[#1A1610] via-[#0D0B08] to-[#050403] pointer-events-none" />
 
       {/* 
-        The Exact Full Invitation Poster Card:
-        - Perfectly constrained to aspect ratio 682:1024 so NOTHING is cropped
-        - Fits cleanly on all viewports without overflow
+        The Full Invitation:
+        - Mobile: Edge-to-edge full screen photo (100dvh) with no black bars at top or bottom
+        - Desktop: Centered luxury invitation card (aspect 682:1024)
       */}
-      <div className="relative h-[100dvh] max-h-[100dvh] max-w-[100vw] w-auto aspect-[682/1024] flex items-center justify-center overflow-hidden">
+      <div className="relative w-full h-full sm:h-[100dvh] sm:max-h-[100dvh] sm:max-w-[100vw] sm:w-auto sm:aspect-[682/1024] flex items-center justify-center overflow-hidden">
         
         {/* Full Image with Ken Burns subtle entrance */}
         <motion.img
@@ -47,7 +47,7 @@ export default function Hero() {
           transition={{ duration: 1.2, ease: 'easeOut' }}
           src="/hero-invitation.png"
           alt="Sithumi & Asen Wedding Invitation"
-          className="w-full h-full object-contain pointer-events-none select-none drop-shadow-2xl"
+          className="w-full h-full object-cover sm:object-contain object-center pointer-events-none select-none drop-shadow-2xl"
         />
 
         {/* Floating Ambient Gold Sparkles */}
@@ -80,7 +80,7 @@ export default function Hero() {
 
         {/* 
           Interactive Click Area for "JOIN OUR CELEBRATION" Button 
-          - Positioned exactly over the button in the image (Y ~ 87.4%, Height ~ 4.4%, Width ~ 42%)
+          - Positioned exactly over the button in the image (Y ~ 87.4%, Height ~ 4.4%)
         */}
         <a
           href="#rsvp"
@@ -91,7 +91,7 @@ export default function Hero() {
             top: '87.4%',
             left: '50%',
             transform: 'translateX(-50%)',
-            width: '42%',
+            width: 'min(28.1dvh, 72vw)',
             height: '4.4%',
           }}
         >
@@ -101,7 +101,7 @@ export default function Hero() {
 
         {/* 
           Interactive Click Area for "SCROLL DOWN"
-          - Positioned exactly over the scroll indicator (Y ~ 93.2%, Height ~ 3.8%, Width ~ 28%)
+          - Positioned exactly over the scroll indicator (Y ~ 93.2%, Height ~ 3.8%)
         */}
         <a
           href="#countdown"
@@ -112,7 +112,7 @@ export default function Hero() {
             top: '93.2%',
             left: '50%',
             transform: 'translateX(-50%)',
-            width: '28%',
+            width: 'min(18.6dvh, 48vw)',
             height: '3.8%',
           }}
         >
