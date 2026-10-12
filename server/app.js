@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import { getRsvps, addRsvp, getWishes, addWish } from './db.js';
+import { getRsvps, addRsvp, getWishes, addWish, deleteWish } from './db.js';
 
 dotenv.config();
 
@@ -93,6 +93,47 @@ app.get('/api/wishes', async (req, res) => {
   } catch (err) {
     console.error('Error fetching wishes:', err.message);
     res.status(500).json({ error: 'Failed to retrieve wishes.' });
+  }
+});
+
+// 5. Delete a Wish (passcode protected)
+app.delete('/api/wishes/:id', async (req, res) => {
+  const passcode = req.query.passcode || req.headers['x-passcode'] || req.body?.passcode;
+  if (passcode !== '2026') {
+    return res.status(401).json({ error: 'Unauthorized. Invalid passcode.' });
+  }
+
+  const { id } = req.params;
+  if (!id) {
+    return res.status(400).json({ error: 'Wish ID is required.' });
+  }
+
+  try {
+    await deleteWish(id);
+    res.json({ message: 'Wish deleted successfully', id });
+  } catch (err) {
+    console.error('Error deleting wish:', err.message);
+    res.status(500).json({ error: 'Failed to delete wish.' });
+  }
+});
+
+// POST fallback for wish deletion
+app.post('/api/wishes/delete', async (req, res) => {
+  const { id, passcode } = req.body;
+  if (passcode !== '2026') {
+    return res.status(401).json({ error: 'Unauthorized. Invalid passcode.' });
+  }
+
+  if (!id) {
+    return res.status(400).json({ error: 'Wish ID is required.' });
+  }
+
+  try {
+    await deleteWish(id);
+    res.json({ message: 'Wish deleted successfully', id });
+  } catch (err) {
+    console.error('Error deleting wish:', err.message);
+    res.status(500).json({ error: 'Failed to delete wish.' });
   }
 });
 

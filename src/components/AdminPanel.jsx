@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { X, Search, FileDown, ShieldAlert, Check, Users, MessageSquare } from 'lucide-react';
+import { X, Search, FileDown, ShieldAlert, Check, Users, MessageSquare, Trash2, Loader2 } from 'lucide-react';
 
 export default function AdminPanel({ isOpen, onClose }) {
   const [passcode, setPasscode] = useState('');
@@ -12,6 +12,9 @@ export default function AdminPanel({ isOpen, onClose }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('all'); // all, attending, declined
   const [activeTab, setActiveTab] = useState('rsvps'); // rsvps, wishes
+  const [deletingId, setDeletingId] = useState(null);
+  const [confirmDeleteId, setConfirmDeleteId] = useState(null);
+  const [actionMessage, setActionMessage] = useState('');
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -72,6 +75,50 @@ export default function AdminPanel({ isOpen, onClose }) {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  };
+
+  const handleDeleteWish = async (id) => {
+    setDeletingId(id);
+    try {
+      let res = await fetch(`/api/wishes/${id}?passcode=2026`, {
+        method: 'DELETE',
+      });
+      if (!res.ok) {
+        res = await fetch('/api/wishes/delete', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id, passcode: '2026' })
+        });
+      }
+
+      if (res.ok) {
+        setWishes(prev => prev.filter(w => String(w.id) !== String(id)));
+        setConfirmDeleteId(null);
+        setActionMessage('Wish deleted successfully.');
+        setTimeout(() => setActionMessage(''), 3500);
+
+        // Also clean up client localStorage if present
+        try {
+          const saved = localStorage.getItem('wedding_wishes');
+          if (saved) {
+            const parsed = JSON.parse(saved);
+            if (Array.isArray(parsed)) {
+              const filtered = parsed.filter(w => String(w.id) !== String(id));
+              localStorage.setItem('wedding_wishes', JSON.stringify(filtered));
+            }
+          }
+        } catch {
+          // ignore
+        }
+      } else {
+        alert('Failed to delete wish. Please try again.');
+      }
+    } catch (err) {
+      console.error('Error deleting wish:', err);
+      alert('Network error while deleting wish.');
+    } finally {
+      setDeletingId(null);
+    }
   };
 
   // Calculate Stats
@@ -339,34 +386,86 @@ export default function AdminPanel({ isOpen, onClose }) {
                 </div>
               ) : (
                 /* Wishes Feed */
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {filteredWishes.map((wish) => (
-                    <div 
-                      key={wish.id}
-                      className="border border-gold/10 hover:border-gold/20 p-5 rounded-2xl bg-white shadow-sm flex flex-col justify-between transition-all duration-300"
-                    >
-                      <div className="space-y-2">
-                        <div className="flex justify-between items-start">
-                          <h4 className="font-serif text-luxury-dark font-medium text-sm">{wish.name}</h4>
-                          <span className="text-[10px] text-gray-400 font-sans">
-                            {new Date(wish.created_at).toLocaleDateString('en-US', {
-                              month: 'short',
-                              day: 'numeric',
-                              year: 'numeric'
-                            })}
-                          </span>
-                        </div>
-                        <p className="text-xs text-luxury-charcoal/80 italic font-light leading-relaxed">
-                          "{wish.message}"
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-                  {filteredWishes.length === 0 && (
-                    <div className="col-span-2 py-12 text-center text-luxury-charcoal/50 italic border border-gold/10 rounded-2xl bg-white">
-                      No wishes found matching search term.
+                <div className="space-y-4">
+                  {actionMessage && (
+                    <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs px-4 py-3 rounded-xl flex items-center space-x-2 animate-fade-in shadow-xs">
+                      <Check className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                      <span className="font-medium">{actionMessage}</span>
                     </div>
                   )}
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {filteredWishes.map((wish) => (
+                      <div 
+                        key={wish.id}
+                        className="border border-gold/10 hover:border-gold/25 p-5 rounded-2xl bg-white shadow-sm flex flex-col justify-between transition-all duration-300 relative group overflow-hidden"
+                      >
+                        <div className="space-y-2">
+                          <div className="flex justify-between items-start gap-3">
+                            <div className="min-w-0 flex-1">
+                              <h4 className="font-serif text-luxury-dark font-medium text-sm truncate">{wish.name}</h4>
+                              <span className="text-[10px] text-gray-400 font-sans block">
+                                {new Date(wish.created_at).toLocaleDateString('en-US', {
+                                  month: 'short',
+                                  day: 'numeric',
+                                  year: 'numeric'
+                                })}
+                              </span>
+                            </div>
+
+                            {/* Delete Trigger Button */}
+                            {confirmDeleteId !== wish.id && (
+                              <button
+                                onClick={() => setConfirmDeleteId(wish.id)}
+                                aria-label={`Delete wish from ${wish.name}`}
+                                title="Delete this wish"
+                                className="text-gray-300 hover:text-rose-600 hover:bg-rose-50 p-1.5 rounded-lg transition-all duration-200 cursor-pointer flex-shrink-0"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </button>
+                            )}
+                          </div>
+
+                          <p className="text-xs text-luxury-charcoal/80 italic font-light leading-relaxed pt-1">
+                            "{wish.message}"
+                          </p>
+                        </div>
+
+                        {/* Inline Delete Confirmation */}
+                        {confirmDeleteId === wish.id && (
+                          <div className="mt-4 pt-3 border-t border-rose-100 flex items-center justify-between bg-rose-50/80 -mx-5 -mb-5 p-3 rounded-b-2xl">
+                            <span className="text-[11px] text-rose-800 font-medium">Delete this wish?</span>
+                            <div className="flex items-center space-x-2">
+                              <button
+                                onClick={() => setConfirmDeleteId(null)}
+                                disabled={deletingId === wish.id}
+                                className="px-2.5 py-1 text-[11px] font-medium text-gray-600 hover:text-gray-900 bg-white border border-gray-200 rounded-md cursor-pointer transition-colors shadow-xs"
+                              >
+                                Cancel
+                              </button>
+                              <button
+                                onClick={() => handleDeleteWish(wish.id)}
+                                disabled={deletingId === wish.id}
+                                className="px-2.5 py-1 text-[11px] font-medium text-white bg-rose-600 hover:bg-rose-700 rounded-md cursor-pointer flex items-center space-x-1.5 transition-colors shadow-xs disabled:opacity-50"
+                              >
+                                {deletingId === wish.id ? (
+                                  <Loader2 className="w-3 h-3 animate-spin" />
+                                ) : (
+                                  <Trash2 className="w-3 h-3" />
+                                )}
+                                <span>Confirm</span>
+                              </button>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                    {filteredWishes.length === 0 && (
+                      <div className="col-span-1 md:col-span-2 py-12 text-center text-luxury-charcoal/50 italic border border-gold/10 rounded-2xl bg-white">
+                        No wishes found matching search term.
+                      </div>
+                    )}
+                  </div>
                 </div>
               )}
             </div>

@@ -7,6 +7,7 @@ const __dirname = path.dirname(__filename);
 
 const RSVPS_FILE = path.join(__dirname, 'rsvps.json');
 const WISHES_FILE = path.join(__dirname, 'wishes.json');
+const DELETED_WISHES_FILE = path.join(__dirname, 'deleted_wishes.json');
 
 // Initialize local files if they don't exist (gracefully ignore in read-only environments)
 function initFile(filePath, defaultValue) {
@@ -21,6 +22,7 @@ function initFile(filePath, defaultValue) {
 
 initFile(RSVPS_FILE, []);
 initFile(WISHES_FILE, []);
+initFile(DELETED_WISHES_FILE, []);
 
 // Queue to serialize local file writes
 let rsvpsQueue = Promise.resolve();
@@ -140,6 +142,10 @@ export const getWishes = async () => {
     list = await readLocalFile(WISHES_FILE);
   }
 
+  // Filter out deleted wishes
+  const deletedWishes = await readLocalFile(DELETED_WISHES_FILE);
+  const deletedSet = new Set((deletedWishes || []).map(id => String(id)));
+
   // Filter out any dummy / test entries including Hiru, Jim & Pam
   const dummyNames = [
     'hiru', 
@@ -157,6 +163,7 @@ export const getWishes = async () => {
     'dr. k. perera'
   ];
   return list.filter(w => {
+    if (!w.id || deletedSet.has(String(w.id))) return false;
     if (!w.name || !w.name.trim()) return false;
     const n = w.name.trim().toLowerCase();
     const m = (w.message || '').trim().toLowerCase();
@@ -207,6 +214,46 @@ export const addWish = async (wish) => {
         console.error('Local wish write error:', err.message);
       }
       resolve(newWish);
+    });
+  });
+};
+
+// 5. Delete Wish
+export const deleteWish = async (id) => {
+  const strId = String(id);
+
+  // Notify Google Sheet if URL exists
+  const sheetUrl = process.env.GOOGLE_SHEET_URL;
+  if (sheetUrl) {
+    try {
+      await fetch(sheetUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ type: 'delete_wish', action: 'delete_wish', id: strId }),
+        redirect: 'follow'
+      });
+    } catch (err) {
+      console.error('Error posting wish deletion to Google Sheet:', err.message);
+    }
+  }
+
+  // Persist deletion locally and remove from active wishes
+  return new Promise((resolve) => {
+    wishesQueue = wishesQueue.then(async () => {
+      try {
+        const deleted = await readLocalFile(DELETED_WISHES_FILE);
+        if (!deleted.includes(strId)) {
+          deleted.push(strId);
+          await writeLocalFile(DELETED_WISHES_FILE, deleted);
+        }
+
+        const wishes = await readLocalFile(WISHES_FILE);
+        const filtered = wishes.filter(w => String(w.id) !== strId);
+        await writeLocalFile(WISHES_FILE, filtered);
+      } catch (err) {
+        console.error('Local wish deletion error:', err.message);
+      }
+      resolve({ success: true, id: strId });
     });
   });
 };
