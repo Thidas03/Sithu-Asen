@@ -45,6 +45,7 @@ const writeLocalFile = async (filePath, data) => {
 
 // 1. Fetch RSVPs
 export const getRsvps = async () => {
+  let list = [];
   const sheetUrl = process.env.GOOGLE_SHEET_URL;
   if (sheetUrl) {
     try {
@@ -53,13 +54,24 @@ export const getRsvps = async () => {
       const response = await fetch(url.toString(), { redirect: 'follow' });
       if (response.ok) {
         const data = await response.json();
-        if (Array.isArray(data)) return data;
+        if (Array.isArray(data)) list = data;
       }
     } catch (err) {
       console.error('Error fetching RSVPs from Google Sheet, falling back to local:', err.message);
+      list = await readLocalFile(RSVPS_FILE);
     }
+  } else {
+    list = await readLocalFile(RSVPS_FILE);
   }
-  return readLocalFile(RSVPS_FILE);
+
+  // Filter out dummy/test RSVPs
+  const dummyEmails = ['test@wedding.com', 'test@example.com', 'john@example.com'];
+  const dummyNames = ['connection test guest', 'test guest', 'john doe'];
+  return list.filter(r => 
+    r.name && r.name.trim() && 
+    !dummyNames.includes(r.name.trim().toLowerCase()) && 
+    (!r.email || !dummyEmails.includes(r.email.trim().toLowerCase()))
+  );
 };
 
 // 2. Add RSVP
@@ -109,6 +121,7 @@ export const addRsvp = async (rsvp) => {
 
 // 3. Fetch Wishes
 export const getWishes = async () => {
+  let list = [];
   const sheetUrl = process.env.GOOGLE_SHEET_URL;
   if (sheetUrl) {
     try {
@@ -117,13 +130,40 @@ export const getWishes = async () => {
       const response = await fetch(url.toString(), { redirect: 'follow' });
       if (response.ok) {
         const data = await response.json();
-        if (Array.isArray(data)) return data;
+        if (Array.isArray(data)) list = data;
       }
     } catch (err) {
       console.error('Error fetching wishes from Google Sheet, falling back to local:', err.message);
+      list = await readLocalFile(WISHES_FILE);
     }
+  } else {
+    list = await readLocalFile(WISHES_FILE);
   }
-  return readLocalFile(WISHES_FILE);
+
+  // Filter out any dummy / test entries including Hiru, Jim & Pam
+  const dummyNames = [
+    'hiru', 
+    'jim & pam', 
+    'jim and pam', 
+    'jim', 
+    'pam', 
+    'test welcomer', 
+    'uncle nimal & aunty sunila', 
+    'uncle nimal', 
+    'aunty sunila', 
+    'ruwan & tharushi', 
+    'ruwan', 
+    'tharushi', 
+    'dr. k. perera'
+  ];
+  return list.filter(w => {
+    if (!w.name || !w.name.trim()) return false;
+    const n = w.name.trim().toLowerCase();
+    const m = (w.message || '').trim().toLowerCase();
+    if (dummyNames.some(d => n.includes(d))) return false;
+    if (m.includes('magical journey') || m.includes('lifetime of love') || m.includes('watching your love story') || m.includes('enjoy every moment')) return false;
+    return true;
+  });
 };
 
 // 4. Add Wish

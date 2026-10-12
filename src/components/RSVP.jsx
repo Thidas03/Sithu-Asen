@@ -124,7 +124,7 @@ export default function RSVP() {
                         name="name"
                         value={formData.name}
                         onChange={handleChange}
-                        placeholder="John Doe"
+                        placeholder="Your full name"
                         className="w-full pl-11 pr-4 py-3 bg-white/50 border border-gold/20 rounded-xl focus:border-gold focus:ring-1 focus:ring-gold focus:outline-none transition-colors duration-300 font-sans text-sm text-luxury-dark placeholder-luxury-charcoal/40"
                       />
                       <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-gold/60" />
@@ -142,7 +142,7 @@ export default function RSVP() {
                         name="email"
                         value={formData.email}
                         onChange={handleChange}
-                        placeholder="john@example.com"
+                        placeholder="your.email@example.com"
                         className="w-full pl-11 pr-4 py-3 bg-white/50 border border-gold/20 rounded-xl focus:border-gold focus:ring-1 focus:ring-gold focus:outline-none transition-colors duration-300 font-sans text-sm text-luxury-dark placeholder-luxury-charcoal/40"
                       />
                       <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-gold/60" />

@@ -24,11 +24,6 @@ export default function Footer({ onAdminClick }) {
           S & A
         </div>
 
-        {/* Closing Quote */}
-        <p className="font-serif italic text-luxury-charcoal/80 text-sm md:text-base max-w-md mx-auto leading-relaxed">
-          "Two souls with but a single thought, two hearts that beat as one."
-        </p>
-
         {/* Wedding hashtag */}
         <div className="inline-flex items-center space-x-2 py-1.5 px-5 border border-gold/30 rounded-full bg-white/70 shadow-xs">
           <span className="font-cinzel text-[10px] md:text-xs tracking-widest text-gold-dark uppercase font-semibold">

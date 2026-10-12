@@ -2,26 +2,31 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageSquareQuote, Send, Award } from 'lucide-react';
 
-const defaultWishes = [
-  {
-    id: 1,
-    name: "Uncle Nimal & Aunty Sunila",
-    message: "Wishing you both a lifetime of love, laughter, and endless happiness! Sithumi, you make a breathtaking bride. Asen, welcome to the family!",
-    date: "June 20, 2026",
-  },
-  {
-    id: 2,
-    name: "Ruwan & Tharushi",
-    message: "So thrilled to be part of your beautiful day! Watching your love story grow has been a privilege. Cheers to this new chapter!",
-    date: "June 22, 2026",
-  },
-  {
-    id: 3,
-    name: "Dr. K. Perera",
-    message: "Congratulations on taking this beautiful step together. May your home be filled with peace, understanding, and joy always.",
-    date: "June 24, 2026",
-  }
+const DUMMY_NAMES = [
+  'hiru', 
+  'jim & pam', 
+  'jim and pam', 
+  'jim', 
+  'pam', 
+  'test welcomer', 
+  'uncle nimal & aunty sunila', 
+  'uncle nimal', 
+  'aunty sunila', 
+  'ruwan & tharushi', 
+  'ruwan', 
+  'tharushi', 
+  'dr. k. perera'
 ];
+
+const isDummyWish = (wish) => {
+  if (!wish || !wish.name || !wish.name.trim()) return true;
+  const n = wish.name.trim().toLowerCase();
+  const m = (wish.message || '').trim().toLowerCase();
+  
+  if (DUMMY_NAMES.some(dummy => n.includes(dummy))) return true;
+  if (m.includes('magical journey') || m.includes('lifetime of love') || m.includes('watching your love story') || m.includes('enjoy every moment')) return true;
+  return false;
+};
 
 export default function GuestWishes() {
   const [wishes, setWishes] = useState([]);
@@ -34,17 +39,19 @@ export default function GuestWishes() {
       const response = await fetch('/api/wishes');
       if (response.ok) {
         const data = await response.json();
-        const formatted = data.map(wish => ({
-          id: wish.id,
-          name: wish.name,
-          message: wish.message,
-          date: new Date(wish.created_at).toLocaleDateString('en-US', {
-            month: 'long',
-            day: 'numeric',
-            year: 'numeric',
-          })
-        }));
-        setWishes(formatted.length > 0 ? formatted : defaultWishes);
+        const formatted = data
+          .filter(wish => !isDummyWish(wish))
+          .map(wish => ({
+            id: wish.id,
+            name: wish.name,
+            message: wish.message,
+            date: new Date(wish.created_at).toLocaleDateString('en-US', {
+              month: 'long',
+              day: 'numeric',
+              year: 'numeric',
+            })
+          }));
+        setWishes(formatted);
       } else {
         loadFromLocalStorage();
       }
@@ -55,13 +62,21 @@ export default function GuestWishes() {
   };
 
   const loadFromLocalStorage = () => {
-    const saved = localStorage.getItem('wedding_wishes');
-    if (saved) {
-      setWishes(JSON.parse(saved));
-    } else {
-      setWishes(defaultWishes);
-      localStorage.setItem('wedding_wishes', JSON.stringify(defaultWishes));
+    try {
+      const saved = localStorage.getItem('wedding_wishes');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) {
+          const filtered = parsed.filter(w => !isDummyWish(w));
+          setWishes(filtered);
+          localStorage.setItem('wedding_wishes', JSON.stringify(filtered));
+          return;
+        }
+      }
+    } catch {
+      // safe fallback
     }
+    setWishes([]);
   };
 
   useEffect(() => {
@@ -165,7 +180,7 @@ export default function GuestWishes() {
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="Aunty Priya"
+                  placeholder="Your Name"
                   className="w-full px-4 py-2.5 bg-white/50 border border-gold/20 rounded-xl focus:border-gold focus:ring-1 focus:ring-gold focus:outline-none transition-colors duration-300 font-sans text-xs md:text-sm text-luxury-dark placeholder-luxury-charcoal/40"
                 />
               </div>
