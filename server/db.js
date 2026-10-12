@@ -142,14 +142,23 @@ export const getWishes = async () => {
     list = await readLocalFile(WISHES_FILE);
   }
 
-  // Filter out deleted wishes
+  // Filter out deleted wishes (from local file + Google Sheet persistent markers)
   const deletedWishes = await readLocalFile(DELETED_WISHES_FILE);
   const deletedSet = new Set((deletedWishes || []).map(id => String(id)));
+
+  // Extract all deleted IDs recorded in Google Sheet deletion markers
+  for (const w of list) {
+    if (w.name === '__DELETED_WISH__' && w.message) {
+      deletedSet.add(String(w.message).trim());
+    }
+  }
 
   // Filter out deleted wishes and any exact mock template entries
   const exactDummyNames = ['jim & pam', 'jim and pam', 'test welcomer'];
   const filtered = list.filter(w => {
-    if (!w.id || deletedSet.has(String(w.id))) return false;
+    if (!w.id) return false;
+    if (w.name === '__DELETED_WISH__') return false;
+    if (deletedSet.has(String(w.id))) return false;
     if (!w.name || !w.name.trim()) return false;
     const n = w.name.trim().toLowerCase();
     const m = (w.message || '').trim().toLowerCase();
@@ -221,24 +230,75 @@ export const addWish = async (wish) => {
 // 5. Delete Wish
 export const deleteWish = async (id) => {
   const strId = String(id);
+  const sheetUrl = process.env.GOOGLE_SHEET_URL;
+
+  // Collect IDs to delete (target ID + any identical duplicate copies)
+  const idsToDelete = new Set([strId]);
+
+  if (sheetUrl) {
+    try {
+      const url = new URL(sheetUrl);
+      url.searchParams.set('action', 'wishes');
+      const response = await fetch(url.toString(), { redirect: 'follow' });
+      if (response.ok) {
+        const data = await response.json();
+        if (Array.isArray(data)) {
+          const target = data.find(w => String(w.id) === strId);
+          if (target && target.name && target.message) {
+            const normalize = (str) => (str || '').replace(/[^\p{L}\p{N}]+/gu, ' ').trim().toLowerCase();
+            const targetKey = `${normalize(target.name)}:::${normalize(target.message)}`;
+            for (const item of data) {
+              if (item.id && `${normalize(item.name)}:::${normalize(item.message)}` === targetKey) {
+                idsToDelete.add(String(item.id));
+              }
+            }
+          }
+        }
+      }
+    } catch (err) {
+      console.error('Error fetching wishes to find duplicates for deletion:', err.message);
+    }
+
+    // Post persistent deletion markers to Google Sheet for all matching IDs
+    for (const deleteId of idsToDelete) {
+      try {
+        await fetch(sheetUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            type: 'wish',
+            id: `del_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
+            name: '__DELETED_WISH__',
+            message: deleteId,
+            created_at: new Date().toISOString()
+          }),
+          redirect: 'follow'
+        });
+      } catch (err) {
+        console.error('Error posting wish deletion marker to Google Sheet:', err.message);
+      }
+    }
+  }
 
   // Persist deletion locally and remove from active wishes
   return new Promise((resolve) => {
     wishesQueue = wishesQueue.then(async () => {
       try {
         const deleted = await readLocalFile(DELETED_WISHES_FILE);
-        if (!deleted.includes(strId)) {
-          deleted.push(strId);
-          await writeLocalFile(DELETED_WISHES_FILE, deleted);
+        for (const deleteId of idsToDelete) {
+          if (!deleted.includes(deleteId)) {
+            deleted.push(deleteId);
+          }
         }
+        await writeLocalFile(DELETED_WISHES_FILE, deleted);
 
         const wishes = await readLocalFile(WISHES_FILE);
-        const filtered = wishes.filter(w => String(w.id) !== strId);
+        const filtered = wishes.filter(w => !idsToDelete.has(String(w.id)));
         await writeLocalFile(WISHES_FILE, filtered);
       } catch (err) {
         console.error('Local wish deletion error:', err.message);
       }
-      resolve({ success: true, id: strId });
+      resolve({ success: true, id: strId, deletedIds: Array.from(idsToDelete) });
     });
   });
 };

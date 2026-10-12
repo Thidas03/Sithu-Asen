@@ -4,6 +4,7 @@ import { MessageSquareQuote, Send, Award } from 'lucide-react';
 
 const isDummyWish = (wish) => {
   if (!wish || !wish.name || !wish.name.trim()) return true;
+  if (wish.name === '__DELETED_WISH__') return true;
   const n = wish.name.trim().toLowerCase();
   const m = (wish.message || '').trim().toLowerCase();
   

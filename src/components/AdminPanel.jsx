@@ -58,7 +58,7 @@ export default function AdminPanel({ isOpen, onClose }) {
         try {
           deletedIds = JSON.parse(localStorage.getItem('deleted_wish_ids') || '[]');
         } catch {}
-        const active = wishesData.filter(w => !deletedIds.includes(String(w.id)));
+        const active = wishesData.filter(w => w.name !== '__DELETED_WISH__' && !deletedIds.includes(String(w.id)));
         setWishes(deduplicate(active));
       }
     } catch (err) {
@@ -111,7 +111,10 @@ export default function AdminPanel({ isOpen, onClose }) {
       }
 
       if (res.ok) {
-        setWishes(prev => prev.filter(w => String(w.id) !== String(id)));
+        const resData = await res.json().catch(() => ({}));
+        const deletedIds = Array.isArray(resData.deletedIds) ? resData.deletedIds.map(String) : [String(id)];
+        
+        setWishes(prev => prev.filter(w => !deletedIds.includes(String(w.id))));
         setConfirmDeleteId(null);
         setActionMessage('Wish deleted successfully.');
         setTimeout(() => setActionMessage(''), 3500);
@@ -119,10 +122,12 @@ export default function AdminPanel({ isOpen, onClose }) {
         // Save to deleted_wish_ids in localStorage to persist deletion on frontend
         try {
           const currentDeleted = JSON.parse(localStorage.getItem('deleted_wish_ids') || '[]');
-          if (!currentDeleted.includes(String(id))) {
-            currentDeleted.push(String(id));
-            localStorage.setItem('deleted_wish_ids', JSON.stringify(currentDeleted));
+          for (const dId of deletedIds) {
+            if (!currentDeleted.includes(dId)) {
+              currentDeleted.push(dId);
+            }
           }
+          localStorage.setItem('deleted_wish_ids', JSON.stringify(currentDeleted));
         } catch {
           // ignore
         }
@@ -133,7 +138,7 @@ export default function AdminPanel({ isOpen, onClose }) {
           if (saved) {
             const parsed = JSON.parse(saved);
             if (Array.isArray(parsed)) {
-              const filtered = parsed.filter(w => String(w.id) !== String(id));
+              const filtered = parsed.filter(w => !deletedIds.includes(String(w.id)));
               localStorage.setItem('wedding_wishes', JSON.stringify(filtered));
             }
           }
