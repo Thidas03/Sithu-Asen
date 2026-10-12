@@ -35,19 +35,19 @@ export default function Hero() {
 
       {/* 
         The Exact Full Invitation Poster Card:
-        - Perfectly constrained to aspect ratio 472:1024 so NOTHING is cropped
-        - Fills full height on mobile/desktop cleanly
+        - Perfectly constrained to aspect ratio 682:1024 so NOTHING is cropped
+        - Fits cleanly on all viewports without overflow
       */}
-      <div className="relative h-[100dvh] max-h-[100dvh] w-auto aspect-[472/1024] flex items-center justify-center overflow-hidden">
+      <div className="relative h-[100dvh] max-h-[100dvh] max-w-[100vw] w-auto aspect-[682/1024] flex items-center justify-center overflow-hidden">
         
         {/* Full Image with Ken Burns subtle entrance */}
         <motion.img
-          initial={{ scale: 1.03, opacity: 0 }}
+          initial={{ scale: 1.02, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 1.2, ease: 'easeOut' }}
           src="/hero-invitation.png"
           alt="Sithumi & Asen Wedding Invitation"
-          className="w-full h-full object-contain pointer-events-none select-none"
+          className="w-full h-full object-contain pointer-events-none select-none drop-shadow-2xl"
         />
 
         {/* Floating Ambient Gold Sparkles */}
@@ -80,7 +80,7 @@ export default function Hero() {
 
         {/* 
           Interactive Click Area for "JOIN OUR CELEBRATION" Button 
-          - Positioned exactly over the button in the image (Y ~ 79.7% to 84.8%, X center 50%)
+          - Positioned exactly over the button in the image (Y ~ 87.4%, Height ~ 4.4%, Width ~ 42%)
         */}
         <a
           href="#rsvp"
@@ -88,20 +88,20 @@ export default function Hero() {
           aria-label="Join our celebration RSVP"
           className="group absolute z-20 cursor-pointer rounded-full transition-all focus:outline-none"
           style={{
-            top: '79.7%',
+            top: '87.4%',
             left: '50%',
             transform: 'translateX(-50%)',
-            width: '52%',
-            height: '5.1%',
+            width: '42%',
+            height: '4.4%',
           }}
         >
           {/* Subtle Hover / Active Gold Sheen */}
-          <span className="absolute inset-0 rounded-full transition-all duration-300 group-hover:bg-[#D4AF37]/20 group-hover:shadow-[0_0_20px_rgba(212,175,55,0.4)] group-active:scale-95" />
+          <span className="absolute inset-0 rounded-full transition-all duration-300 group-hover:bg-[#D4AF37]/25 group-hover:shadow-[0_0_20px_rgba(212,175,55,0.4)] group-active:scale-95" />
         </a>
 
         {/* 
           Interactive Click Area for "SCROLL DOWN"
-          - Positioned exactly over the scroll indicator (Y ~ 88.1% to 92.6%)
+          - Positioned exactly over the scroll indicator (Y ~ 93.2%, Height ~ 3.8%, Width ~ 28%)
         */}
         <a
           href="#countdown"
@@ -109,11 +109,11 @@ export default function Hero() {
           aria-label="Scroll down to wedding details"
           className="group absolute z-20 cursor-pointer rounded-xl transition-all focus:outline-none flex items-center justify-center"
           style={{
-            top: '88.1%',
+            top: '93.2%',
             left: '50%',
             transform: 'translateX(-50%)',
-            width: '32%',
-            height: '4.8%',
+            width: '28%',
+            height: '3.8%',
           }}
         >
           <span className="absolute inset-0 rounded-xl transition-all duration-300 group-hover:bg-white/10 group-active:scale-95" />

@@ -4,16 +4,16 @@ import { Image, X, ChevronLeft, ChevronRight, Eye } from 'lucide-react';
 
 const photos = [
   {
-    src: "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&w=1200&q=80",
-    caption: "The Rings",
+    src: "/gallery-1.jpg",
+    alt: "Sithumi & Asen Gallery Moment 1",
   },
   {
-    src: "https://images.unsplash.com/photo-1532712938310-34cb3982ef74?auto=format&fit=crop&w=1200&q=80",
-    caption: "A Walk to Remember",
+    src: "/gallery-2.jpg",
+    alt: "Sithumi & Asen Gallery Moment 2",
   },
   {
-    src: "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&w=1200&q=80",
-    caption: "Sweet Embraces",
+    src: "/gallery-3.jpg",
+    alt: "Sithumi & Asen Gallery Moment 3",
   }
 ];
 
@@ -80,32 +80,26 @@ export default function Gallery() {
               onClick={() => openLightbox(index)}
               className="relative rounded-2xl overflow-hidden cursor-pointer group shadow-lg hover:shadow-2xl transition-all duration-500 border border-gold/15 bg-luxury-dark/5"
             >
-              {/* Image container with fixed elegant portrait aspect ratio */}
-              <div className="aspect-[3/4] w-full overflow-hidden relative">
+              {/* Image container matching natural 2:3 portrait ratio */}
+              <div className="aspect-[2/3] w-full overflow-hidden relative">
                 <img
                   src={photo.src}
-                  alt={photo.caption}
+                  alt={photo.alt}
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
 
-                {/* Subtle gradient overlay for caption contrast */}
-                <div className="absolute inset-0 bg-gradient-to-t from-luxury-dark/85 via-luxury-dark/20 to-transparent opacity-60 group-hover:opacity-90 transition-opacity duration-300" />
+                {/* Subtle dark gradient overlay on hover */}
+                <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-                {/* Hover / Caption Info */}
-                <div className="absolute inset-0 flex flex-col items-center justify-end p-6 text-center text-white transition-all duration-300">
-                  <div className="p-3 rounded-full bg-gold/20 backdrop-blur-sm border border-gold/40 mb-3 opacity-0 group-hover:opacity-100 transform translate-y-3 group-hover:translate-y-0 transition-all duration-300">
+                {/* Hover Expand Icon (no text) */}
+                <div className="absolute inset-0 flex items-center justify-center p-6 text-center text-white transition-all duration-300 pointer-events-none">
+                  <div className="p-3.5 rounded-full bg-black/40 backdrop-blur-md border border-gold/50 shadow-lg opacity-0 group-hover:opacity-100 transform scale-75 group-hover:scale-100 transition-all duration-300">
                     <Eye className="w-5 h-5 text-gold-light" />
                   </div>
-                  <span className="font-serif text-xl font-light tracking-wide text-white drop-shadow-md group-hover:text-gold-light transition-colors duration-300">
-                    {photo.caption}
-                  </span>
-                  <span className="font-sans text-[10px] uppercase tracking-widest text-gold/80 mt-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    Click to view
-                  </span>
                 </div>
 
                 {/* Elegant gold border frame on hover */}
-                <div className="absolute inset-3 border border-gold/30 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                <div className="absolute inset-3 border border-gold/40 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
               </div>
             </motion.div>
           ))}
@@ -157,23 +151,13 @@ export default function Gallery() {
               exit={{ scale: 0.9, opacity: 0 }}
               transition={{ duration: 0.3 }}
               onClick={(e) => e.stopPropagation()}
-              className="relative max-w-4xl max-h-[85vh] flex flex-col items-center justify-center"
+              className="relative max-w-4xl max-h-[88vh] flex flex-col items-center justify-center"
             >
               <img
                 src={photos[activePhotoIndex].src}
-                alt={photos[activePhotoIndex].caption}
-                className="max-w-full max-h-[75vh] object-contain rounded-xl border border-gold/30 shadow-2xl"
+                alt={photos[activePhotoIndex].alt}
+                className="max-w-full max-h-[82vh] object-contain rounded-xl border border-gold/30 shadow-2xl"
               />
-              
-              {/* Photo Caption */}
-              <div className="mt-4 text-center">
-                <p className="font-serif text-xl md:text-2xl text-gold font-light tracking-wider">
-                  {photos[activePhotoIndex].caption}
-                </p>
-                <p className="font-sans text-[10px] md:text-xs text-white/50 uppercase tracking-widest mt-1">
-                  {activePhotoIndex + 1} of {photos.length}
-                </p>
-              </div>
             </motion.div>
           </motion.div>
         )}
