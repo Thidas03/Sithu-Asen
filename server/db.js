@@ -146,37 +146,24 @@ export const getWishes = async () => {
   const deletedWishes = await readLocalFile(DELETED_WISHES_FILE);
   const deletedSet = new Set((deletedWishes || []).map(id => String(id)));
 
-  // Filter out any dummy / test entries including Hiru, Jim & Pam
-  const dummyNames = [
-    'hiru', 
-    'jim & pam', 
-    'jim and pam', 
-    'jim', 
-    'pam', 
-    'test welcomer', 
-    'uncle nimal & aunty sunila', 
-    'uncle nimal', 
-    'aunty sunila', 
-    'ruwan & tharushi', 
-    'ruwan', 
-    'tharushi', 
-    'dr. k. perera'
-  ];
+  // Filter out deleted wishes and any exact mock template entries
+  const exactDummyNames = ['jim & pam', 'jim and pam', 'test welcomer'];
   const filtered = list.filter(w => {
     if (!w.id || deletedSet.has(String(w.id))) return false;
     if (!w.name || !w.name.trim()) return false;
     const n = w.name.trim().toLowerCase();
     const m = (w.message || '').trim().toLowerCase();
-    if (dummyNames.some(d => n.includes(d))) return false;
-    if (m.includes('magical journey') || m.includes('lifetime of love') || m.includes('watching your love story') || m.includes('enjoy every moment')) return false;
+    if (exactDummyNames.includes(n)) return false;
+    if (m === 'so happy for you both! enjoy every moment of this magical journey.') return false;
     return true;
   });
 
-  // Deduplicate identical submissions (same person + exact same message)
+  // Deduplicate identical submissions (same person + same message)
+  const normalize = (str) => (str || '').replace(/[^\p{L}\p{N}]+/gu, ' ').trim().toLowerCase();
   const seen = new Set();
   const deduplicated = [];
   for (const w of filtered) {
-    const key = `${(w.name || '').trim().toLowerCase()}:::${(w.message || '').trim().toLowerCase()}`;
+    const key = `${normalize(w.name)}:::${normalize(w.message)}`;
     if (!seen.has(key)) {
       seen.add(key);
       deduplicated.push(w);

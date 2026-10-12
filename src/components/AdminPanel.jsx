@@ -28,10 +28,11 @@ export default function AdminPanel({ isOpen, onClose }) {
   };
 
   const deduplicate = (list) => {
+    const normalize = (str) => (str || '').replace(/[^\p{L}\p{N}]+/gu, ' ').trim().toLowerCase();
     const seen = new Set();
     const result = [];
     for (const w of list) {
-      const key = `${(w.name || '').trim().toLowerCase()}:::${(w.message || '').trim().toLowerCase()}`;
+      const key = `${normalize(w.name)}:::${normalize(w.message)}`;
       if (!seen.has(key)) {
         seen.add(key);
         result.push(w);

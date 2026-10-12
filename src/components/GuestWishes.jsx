@@ -2,29 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageSquareQuote, Send, Award } from 'lucide-react';
 
-const DUMMY_NAMES = [
-  'hiru', 
-  'jim & pam', 
-  'jim and pam', 
-  'jim', 
-  'pam', 
-  'test welcomer', 
-  'uncle nimal & aunty sunila', 
-  'uncle nimal', 
-  'aunty sunila', 
-  'ruwan & tharushi', 
-  'ruwan', 
-  'tharushi', 
-  'dr. k. perera'
-];
-
 const isDummyWish = (wish) => {
   if (!wish || !wish.name || !wish.name.trim()) return true;
   const n = wish.name.trim().toLowerCase();
   const m = (wish.message || '').trim().toLowerCase();
   
-  if (DUMMY_NAMES.some(dummy => n.includes(dummy))) return true;
-  if (m.includes('magical journey') || m.includes('lifetime of love') || m.includes('watching your love story') || m.includes('enjoy every moment')) return true;
+  if (n === 'jim & pam' || n === 'jim and pam' || n === 'test welcomer') return true;
+  if (m === 'so happy for you both! enjoy every moment of this magical journey.') return true;
   return false;
 };
 
@@ -45,10 +29,11 @@ export default function GuestWishes() {
   };
 
   const deduplicate = (list) => {
+    const normalize = (str) => (str || '').replace(/[^\p{L}\p{N}]+/gu, ' ').trim().toLowerCase();
     const seen = new Set();
     const result = [];
     for (const w of list) {
-      const key = `${(w.name || '').trim().toLowerCase()}:::${(w.message || '').trim().toLowerCase()}`;
+      const key = `${normalize(w.name)}:::${normalize(w.message)}`;
       if (!seen.has(key)) {
         seen.add(key);
         result.push(w);
